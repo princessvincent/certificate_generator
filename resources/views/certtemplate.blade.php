@@ -290,93 +290,119 @@
 
 
 <html>
-    <head>
-        <style type='text/css'>
-            body, html {
-                margin: 0;
-                padding: 0;
-            }
-            body {
-                color: black;
-                display: table;
-                font-family: Georgia, serif;
-                font-size: 24px;
-                text-align: center;
-            }
-            .container {
-                border: 20px solid tan;
-                width: 750px;
-                height: 563px;
-                display: table-cell;
-                vertical-align: middle;
-            }
-            .logo {
-                color: tan;
-            }
 
-            .marquee {
-                color: tan;
-                font-size: 48px;
-                margin: 20px;
-            }
-            .assignment {
-                margin: 20px;
-            }
-            .person {
-                border-bottom: 2px solid black;
-                font-size: 32px;
-                font-style: italic;
-                margin: 20px auto;
-                width: 400px;
-            }
-            .signature{
-                border-bottom: 2px solid black;
-                font-size: 32px;
-                /* font-style: italic; */
-                margin: 20px auto;
-                width: 100px;
-                height: 70px;
-            }
-            .reason {
-                margin: 20px;
-            }
-        </style>
-    </head>
-    <body>
+<head>
+    <style type='text/css'>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            color: black;
+            display: table;
+            font-family: Georgia, serif;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .container {
+            border: 20px solid tan;
+            width: 750px;
+            height: 563px;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .logo {
+            color: tan;
+        }
+
+        .marquee {
+            color: tan;
+            font-size: 48px;
+            margin: 20px;
+        }
+
+        .assignment {
+            margin: 20px;
+        }
+
+        .person {
+            border-bottom: 2px solid black;
+            font-size: 32px;
+            font-style: italic;
+            margin: 20px auto;
+            width: 400px;
+        }
+
+        .signature {
+            border-bottom: 2px solid black;
+            font-size: 32px;
+            /* font-style: italic; */
+            margin: 20px auto;
+            width: 100px;
+            height: 70px;
+        }
+
+        .reason {
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-     @if (session('status'))
-         <script>
-             swal("{{ session('status') }}");
-         </script>
-     @endif
-        <div class="container">
+    @if (session('status'))
+        <script>
+            swal("{{ session('status') }}");
+        </script>
+    @endif
+    <div class="container">
+        @if (Auth::user()->logo == '')
             <div class="logo">
                 <img src="{{ asset('black/img/hlogo.jpg') }}" alt="" width="30" height="30">
             </div>
-
-            <div class="marquee">
-                Certificate of Completion
+        @else
+            <div class="logo">
+                <img class="avatar" src="{{ asset('logoupload') }}/logos/{{ Auth::user()->logo }}" alt="" width="30" height="30">
             </div>
+        @endif
 
-            <div class="assignment">
-                This certificate is presented to
-            </div>
 
-            <div class="person">
-                {{  $mailCertificate['name'] }}
-            </div>
 
-            <div class="reason">
-                {{  $mailCertificate['reason'] }} of the 
-                {{  $mailCertificate['course'] }} beginner course
-            </div>
-
-            <div>
-            {{-- <div class="assignment mt-3">Regards</div> --}}
-            <img class="signature" src="{{ asset('black/img/signature.jpg') }}" alt="">
-            <div class="reason">{{  $mailCertificate['boardname'] }}</div>
-            
-            </div>
+        <div class="marquee">
+            Certificate of Completion
         </div>
-    </body>
+
+        <div class="assignment">
+            This certificate is presented to
+        </div>
+
+        <div class="person">
+            {{ $mailCertificate['name'] }}
+        </div>
+
+        <div class="reason">
+            {{ $mailCertificate['reason'] }} 
+            {{ $mailCertificate['course'] }}
+        </div>
+
+        <div>
+            @if (Auth::user()->signature == '')
+                <img class="signature" src="{{ asset('black/img/signature.jpg') }}" alt="" >
+                <div class="reason">{{ $mailCertificate['boardname'] }}</div>
+            @else
+                <img class="signature" src="{{ asset('signupload/signature/' . Auth::user()->signature) }}"
+                    alt="">
+                <div class="reason">{{ $mailCertificate['directorname'] }}</div>
+            @endif
+            {{-- <div class="assignment mt-3">Regards</div> --}}
+
+
+        </div>
+    </div>
+</body>
+
 </html>

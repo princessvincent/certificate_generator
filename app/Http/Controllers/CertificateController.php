@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\certificateMail;
+use App\Models\User;
 use App\Models\Csvdata;
 use Illuminate\Http\Request;
+use App\Mail\certificateMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\File as FacadesFile;
 
 class CertificateController extends Controller
 {
@@ -56,7 +58,7 @@ class CertificateController extends Controller
                         'name' => $fetch->student_name,
                         'reason' => $fetch->purpose,
                         'course' => $fetch->course,
-                        'boardname' => $fetch->director_name,
+                        'directorname' => $fetch->director_name,
                     ];
                     $send = Mail::to($fetch->email)->send(new certificateMail($mailCertificate));
                     if ($send) {
@@ -78,6 +80,67 @@ class CertificateController extends Controller
         }
 
         // dd($uploadcsv);
+
+    }
+
+    public function editlogoandsign()
+    {
+        $user = User::where('id', Auth::user()->id)->first();
+        return view('profile.logoandsignature', compact('user'));
+    }
+
+
+    public function updatelogo(Request $request)
+    {
+        // if(Auth::check()){
+            $updatelogo = User::find(Auth::user()->id);
+            // $update->status = $request->status;
+            if ($request->hasfile('logo') && $request->logo != '') {
+                $destination1 = 'logoupload/logos/' . $updatelogo->logo;
+                // dd($destination1);
+                if (FacadesFile::exists($destination1)) {
+                    FacadesFile::delete($destination1);
+                    // return true;
+                }
+                $file = $request->file('logo');
+                $extention = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $extention;
+                $file->move('logoupload/logos/', $filename);
+                $updatelogo->logo = $filename;
+            }
+            // $data =  $upemp->profile;
+            $updatelogo->update();
+            return back()->with('status', 'Logo successfully updated.');
+        // }else{
+        //     return redirect('bladelogin')->with('status', 'Please kindly Login!');
+        // }
+
+    }
+
+    public function updatesignature(Request $request)
+    {
+        // if(Auth::check()){
+            $updatesign = User::find(Auth::user()->id);
+            // $update->status = $request->status;
+            if ($request->hasfile('signature') && $request->signature != '') {
+                $destination1 = 'signupload/signature/' . $updatesign->signature;
+                // dd($destination1);
+                if (FacadesFile::exists($destination1)) {
+                    FacadesFile::delete($destination1);
+                    // return true;
+                }
+                $file = $request->file('signature');
+                $extention = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $extention;
+                $file->move('signupload/signature/', $filename);
+                $updatesign->signature = $filename;
+            }
+            // $data =  $upemp->profile;
+            $updatesign->update();
+            return back()->with('status', 'Signature successfully updated.');
+        // }else{
+        //     return redirect('bladelogin')->with('status', 'Please kindly Login!');
+        // }
 
     }
 }

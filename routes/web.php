@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\CertificateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +43,12 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
+    Route::put('profile/logo', ['as' => 'profile.logo', 'uses' => 'App\Http\Controllers\CertificateController@updatelogo']);
+	// Route::put('profile/sign/', ['as' => 'profile.sign/', 'uses' => 'App\Http\Controllers\CertificateController@updatesignature']);
+    Route::put('updatelogo/{id}', [CertificateController::class,'updatelogo'])->name('updatelogo');
+    Route::put('updatesignature/{id}', [CertificateController::class,'updatesignature'])->name('updatesignature');
+    Route::get('editlogoandsign', [CertificateController::class,'editlogoandsign'])->name('editlogoandsign');
+
 });
 
 Route::get('template', function(){
@@ -48,3 +56,13 @@ Route::get('template', function(){
 });
 
 Route::post('upload',[CertificateController::class, 'upload'])->name('upload');
+
+Route::get('/downloadcsv', function () {
+    $path = storage_path('app/public/studentinformation.csv');
+
+    if (!Storage::exists($path)) {
+
+    }
+
+    return Response::download($path, 'studentinformation.csv');
+});
