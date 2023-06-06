@@ -55,6 +55,10 @@ Route::get('template', function(){
 	return view('certtemplate');
 });
 
+Route::get('instruction', function(){
+    return view('instruction');
+});
+
 Route::post('upload',[CertificateController::class, 'upload'])->name('upload');
 
 Route::get('/downloadcsv', function () {

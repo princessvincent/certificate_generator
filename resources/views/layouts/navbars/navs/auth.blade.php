@@ -86,7 +86,7 @@
         </div>
     </div>
 </nav>
-<div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal"
+{{-- <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -98,4 +98,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
